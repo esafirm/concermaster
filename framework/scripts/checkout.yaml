@@ -1,0 +1,74 @@
+name: "Product Checkout Suite"
+description: "Tests for browse → cart → checkout flow"
+
+scenarios:
+
+  - id: "add_item_to_cart"
+    name: "Add first product to cart from listing"
+    steps:
+      - action: ASSERT_VISIBLE
+        target: "rv_products"           # RecyclerView with product list
+
+      - action: SCROLL_TO_VIEW
+        target: "btn_add_to_cart"       # scroll until Add to Cart button visible
+
+      - action: CLICK
+        target: "btn_add_to_cart"
+
+      - action: ASSERT_VISIBLE
+        target: "tv_cart_badge"
+
+      - action: ASSERT_TEXT
+        target: "tv_cart_badge"
+        value: "1"
+
+
+  - id: "checkout_flow_guest"
+    name: "Complete checkout as guest user"
+    steps:
+      - action: CLICK
+        target: "iv_cart_icon"
+
+      - action: ASSERT_VISIBLE
+        target: "tv_cart_total"
+
+      - action: CLICK
+        target: "btn_proceed_checkout"
+
+      # Use content-desc targeting for the guest button (no id)
+      - action: CLICK
+        target: "Continue as Guest"
+        targetType: CONTENT_DESC
+
+      - action: ASSERT_VISIBLE
+        target: "et_shipping_address"
+
+      - action: TYPE_TEXT
+        target: "et_shipping_address"
+        value: "123 Main St, Jakarta"
+
+      - action: SCROLL_DOWN           # no target = scroll the root view
+
+      - action: CLICK
+        target: "btn_place_order"
+
+      - action: ASSERT_VISIBLE
+        target: "tv_order_confirmed"
+        timeout: 10000
+
+
+  - id: "empty_cart_state"
+    name: "Empty cart shows correct empty state"
+    steps:
+      - action: CLICK
+        target: "iv_cart_icon"
+
+      - action: ASSERT_VISIBLE
+        target: "tv_empty_cart_message"
+
+      - action: ASSERT_TEXT
+        target: "tv_empty_cart_message"
+        value: "Your cart is empty"
+
+      - action: ASSERT_NOT_VISIBLE
+        target: "btn_proceed_checkout"

@@ -1,0 +1,82 @@
+name: "Login Flow Suite"
+description: "End-to-end tests for the login screen"
+
+scenarios:
+
+  - id: "login_success"
+    name: "Successful login with valid credentials"
+    steps:
+      - action: ASSERT_VISIBLE
+        target: "et_username"
+
+      - action: TYPE_TEXT
+        target: "et_username"
+        value: "john@example.com"
+
+      - action: TYPE_TEXT
+        target: "et_password"
+        value: "secret123"
+
+      - action: CLICK
+        target: "btn_login"
+
+      - action: ASSERT_VISIBLE
+        target: "tv_welcome"
+        timeout: 8000       # allow 8s for network call
+
+      - action: ASSERT_TEXT
+        target: "tv_welcome"
+        value: "Welcome, John!"
+
+
+  - id: "login_empty_fields"
+    name: "Error shown when submitting empty credentials"
+    steps:
+      - action: CLICK
+        target: "btn_login"
+
+      - action: ASSERT_VISIBLE
+        target: "tv_error_message"
+
+      - action: ASSERT_TEXT
+        target: "tv_error_message"
+        value: "Please enter your email and password"
+
+
+  - id: "login_invalid_password"
+    name: "Error shown for wrong password"
+    steps:
+      - action: TYPE_TEXT
+        target: "et_username"
+        value: "john@example.com"
+
+      - action: TYPE_TEXT
+        target: "et_password"
+        value: "wrongpassword"
+
+      - action: CLICK
+        target: "btn_login"
+
+      - action: ASSERT_VISIBLE
+        target: "tv_error_message"
+        timeout: 8000
+
+      - action: ASSERT_TEXT
+        target: "tv_error_message"
+        value: "Invalid email or password"
+
+
+  - id: "login_forgot_password_link"
+    name: "Forgot password navigates to reset screen"
+    steps:
+      - action: SCROLL_DOWN
+        target: "scroll_login_form"      # scroll the form container
+
+      - action: ASSERT_VISIBLE
+        target: "tv_forgot_password"
+
+      - action: CLICK
+        target: "tv_forgot_password"
+
+      - action: ASSERT_VISIBLE
+        target: "et_reset_email"          # element unique to the reset screen

@@ -1,0 +1,48 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// app/build.gradle  (module level)
+// ─────────────────────────────────────────────────────────────────────────────
+
+android {
+    defaultConfig {
+        // Required: tells the test APK which runner to use
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+}
+
+dependencies {
+    // ── Framework dependencies ────────────────────────────────────────────────
+
+    androidTestImplementation 'androidx.test:runner:1.5.2'
+    androidTestImplementation 'androidx.test:rules:1.5.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.5.1'
+    androidTestImplementation 'junit:junit:4.13.2'
+
+    // YAML parser (SnakeYAML — Android-compatible build)
+    androidTestImplementation 'org.yaml:snakeyaml:2.2'
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// AndroidManifest.xml  (inside the <manifest> tag of your TEST module)
+// ─────────────────────────────────────────────────────────────────────────────
+/*
+  <!-- Required to read scripts from /sdcard/test-scripts/ -->
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+  <!-- Required on Android 10+ (API 29+) if targeting shared storage -->
+  <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+      tools:ignore="ScopedStorage" />
+*/
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Grant permission before running tests (add to your CI script)
+// ─────────────────────────────────────────────────────────────────────────────
+/*
+  adb shell pm grant com.example.app.test android.permission.READ_EXTERNAL_STORAGE
+  adb shell pm grant com.example.app.test android.permission.WRITE_EXTERNAL_STORAGE
+
+  # Android 11+ — grant MANAGE_EXTERNAL_STORAGE via Settings intent is required,
+  # OR use a test rule (see GrantExternalStorageRule.kt in the framework)
+*/
