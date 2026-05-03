@@ -5,6 +5,20 @@ while producing **standard JUnit results** compatible with any CI/CD pipeline.
 
 ---
 
+## Core Principles
+
+1. **Scripts as the source of truth** — testers write YAML, not Kotlin. Each file is a test suite; each scenario maps to one JUnit test case.
+
+2. **Standard JUnit output** — the framework wraps everything in `ParentRunner<TestScenario>`, so results look identical to native Kotlin tests. No custom reporting needed.
+
+3. **Espresso under the hood** — supported actions are translated to real Espresso calls, so tests run against the real app — not mocks.
+
+### Practical benefit
+
+Non-developers (QA, automation engineers) can write, modify, and extend test cases without touching Kotlin code, while the engineering team owns the runner and executor. Test scripts can be pushed to a device dynamically via `adb push`, meaning test suites can be updated without recompiling the APK.
+
+---
+
 ## Architecture
 
 ```
